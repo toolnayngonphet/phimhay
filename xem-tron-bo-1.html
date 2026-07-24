@@ -2,10 +2,91 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=https://vt.tiktok.com/ZS9rCaJK1mMbc-qWNWf/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đang chuyển hướng...</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Sans-Serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+        }
+        .loader {
+            border: 4px solid #333;
+            border-top: 4px solid #fe2c55;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <p>Nếu trang không tự chuyển, hãy <a href="https://vt.tiktok.com/ZS9rCaJK1mMbc-qWNWf/">bấm vào đây</a>.</p>
+
+    <div>
+        <div class="loader"></div>
+        <p>Đang mở ứng dụng TikTok...</p>
+        <p style="font-size: 13px; color: #888;">Nếu ứng dụng không tự mở, <a id="manual-link" href="#" style="color: #fe2c55;">bấm vào đây</a>.</p>
+    </div>
+
+    <script>
+        (function() {
+            // Link TikTok đích của bạn
+            var targetUrl = "https://vt.tiktok.com/ZS9rCaJK1mMbc-qWNWf/";
+            
+            // Tách mã đường dẫn/mã giới thiệu nếu cần
+            var encodedUrl = encodeURIComponent(targetUrl);
+
+            // Các URL Scheme để mở thẳng App TikTok
+            // Android sử dụng Intent Scheme để bypass WebView Facebook
+            var androidIntent = "intent://dl/recommend?url=" + encodedUrl + "#Intent;package=com.zhiliaoapp.musically;scheme=snssdk1128;end;";
+            
+            // iOS sử dụng Custom Scheme
+            var iosScheme = "snssdk1128://webview?url=" + encodedUrl;
+
+            // Nhận diện hệ điều hành
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var isAndroid = /android/i.test(userAgent);
+            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+
+            // Thiết lập link thủ công cho nút cấp cứu
+            document.getElementById('manual-link').href = targetUrl;
+
+            function redirectToApp() {
+                if (isAndroid) {
+                    // Trên Android, Intent sẽ buộc trình duyệt đẩy sang TikTok App
+                    window.location.href = androidIntent;
+                } else if (isIOS) {
+                    // Trên iOS, giả lập cú click thẻ <a> để qua mặt bộ lọc tự động
+                    var a = document.createElement('a');
+                    a.href = iosScheme;
+                    a.rel = 'noreferrer';
+                    document.body.appendChild(a);
+                    a.click();
+                } else {
+                    // Trình duyệt PC / Môi trường khác
+                    window.location.href = targetUrl;
+                }
+
+                // Fallback: Nếu sau 2.5 giây không mở được app (chưa cài app), đẩy sang web TikTok gốc
+                setTimeout(function() {
+                    window.location.href = targetUrl;
+                }, 2500);
+            }
+
+            // Thực thi ngay khi trang tải xong
+            window.onload = redirectToApp;
+        })();
+    </script>
 </body>
 </html>
