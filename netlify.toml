@@ -1,4 +1,0 @@
-[[redirects]]
-  from = "/xem-tron-bo-1"
-  to = "/.netlify/functions/redirect"
-  status = 200
